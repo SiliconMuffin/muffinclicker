@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Muffin Clicker</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      --background: #fff2d0;
+      --card: #fffaf0;
+      --text: #593b32;
+      --panel: #ffedbd;
+      --border: #f0dca9;
+      --accent: #bd6b48;
+      --accent-hover: #a95738;
+
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      color: var(--text);
+      background: var(--background);
+      transition: background 0.25s, color 0.25s;
+    }
+
+    body[data-theme="dark"] {
+      --background: #1d1b24;
+      --card: #2a2733;
+      --text: #f6edf8;
+      --panel: #393443;
+      --border: #494353;
+      --accent: #9b64d8;
+      --accent-hover: #814cc0;
+    }
+
+    body[data-theme="strawberry"] {
+      --background: #ffe3eb;
+      --card: #fff7f9;
+      --text: #653446;
+      --panel: #ffedf2;
+      --border: #f2cbd7;
+      --accent: #d75c82;
+      --accent-hover: #bd4169;
+    }
+
+    body[data-theme="mint"] {
+      --background: #ddf5e8;
+      --card: #f7fff9;
+      --text: #315345;
+      --panel: #e7f8ed;
+      --border: #c5e6d1;
+      --accent: #439876;
+      --accent-hover: #347d60;
+    }
+
+    body[data-theme="sky"] {
+      --background: #dff2ff;
+      --card: #f8fcff;
+      --text: #304d65;
+      --panel: #eaf6ff;
+      --border: #c9e1f2;
+      --accent: #4c8fc0;
+      --accent-hover: #3975a1;
+    }
+
+    .game {
+      width: min(480px, 100%);
+      padding: 24px;
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 10px 30px #00000018;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .subtitle {
+      margin: 0 0 14px;
+    }
+
+    #score {
+      font-size: 2.2rem;
+      font-weight: bold;
+    }
+
+    .theme-picker {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .theme-picker select {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      background: var(--card);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    #muffin {
+      display: block;
+      margin: 14px auto 6px;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #muffin img {
+      display: block;
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      animation: muffin-float 2s ease-in-out infinite;
+    }
+
+    #muffin:active img {
+      transform: scale(0.88);
+    }
+
+    #muffin img.click-animation {
+      animation: muffin-pop 0.3s ease;
+    }
+
+    @keyframes muffin-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes muffin-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18) rotate(-6deg); }
+      100% { transform: scale(1); }
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 10px 0 18px;
+    }
+
+    .notice {
+      min-height: 24px;
+      margin: 8px 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .golden-area {
+      margin: 12px 0;
+    }
+
+    #goldenMuffin {
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 14px;
+      color: #573b15;
+      background: #ffd34f;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      animation: gold-glow 0.8s ease-in-out infinite alternate;
+    }
+
+    #goldenMuffin[hidden] {
+      display: none;
+    }
+
+    @keyframes gold-glow {
+      from { transform: scale(1); box-shadow: 0 0 4px #ffca28; }
+      to { transform: scale(1.05); box-shadow: 0 0 18px #ffca28; }
+    }
+
+    .shop,
+    .achievements {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 2px solid var(--border);
+    }
+
+    .shop-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--panel);
+      text-align: left;
+    }
+
+    .shop-item p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+    }
+
+    .shop-item button,
+    .reset-button {
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: var(--accent);
+      font: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .shop-item button:hover:not(:disabled),
+    .reset-button:hover {
+      background: var(--accent-hover);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .achievement-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .achievement {
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      opacity: 0.45;
+      font-size: 0.85rem;
+    }
+
+    .achievement.unlocked {
+      opacity: 1;
+      background: var(--panel);
+    }
+
+    .save-note {
+      margin: 14px 0 0;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .reset-button {
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+
+<body data-theme="cookie">
+  <main class="game">
+    <h1>Muffin Clicker</h1>
+    <p class="subtitle">Bake muffins, upgrade your bakery, and collect rewards!</p>
+
+    <div>Muffins: <span id="score">0</span></div>
+
+    <label class="theme-picker">
+      <span>Theme:</span>
+      <select id="themeSelect">
+        <option value="cookie">Cookie 🍪</option>
+        <option value="dark">Dark 🌙</option>
+        <option value="strawberry">Strawberry 🍓</option>
+        <option value="mint">Mint 🌿</option>
+        <option value="sky">Sky ☁️</option>
+      </select>
+    </label>
+
+    <button id="muffin" aria-label="Click the muffin">
+      <img src="muffin.png" alt="Colorful muffin">
+    </button>
+
+    <div class="stats">
+      <span>Per click: <strong id="power">1</strong></span>
+      <span>Per second: <strong id="perSecond">0</strong></span>
+    </div>
+
+    <div id="notice" class="notice" aria-live="polite"></div>
+
+    <div class="golden-area">
+      <button id="goldenMuffin" hidden>
+        ✨ Golden Muffin! Click for <span id="goldenReward">0</span> muffins!
+      </button>
+    </div>
+
+    <section class="shop">
+      <h2>Bakery Shop</h2>
+
+      <div class="shop-item">
+        <div>
+          <strong>Golden Spoon 🥄</strong>
+          <p>+1 muffin per click · Owned: <span id="spoonCount">0</span></p>
+        </div>
+        <button id="buySpoon">Buy — <span id="spoonCost">10</span></button>
+      </div>
+
+      <div class="shop-item">
+        <div>
+          <strong>Mini Bakery 🏠</strong>
+          <p>+1 muffin per second · Owned: <span id="bakeryCount">0</span></p>
+        </div>
+        <button id="buyBakery">Buy — <span id="bakeryCost">25</span></button>
+      </div>
+
+      <div class="shop-item">
+        <div>
+          <strong>Super Oven 🔥</strong>
+          <p>+5 muffins per second · Owned: <span id="ovenCount">0</span></p>
+        </div>
+        <button id="buyOven">Buy — <span id="ovenCost">100</span></button>
+      </div>
+
+      <div class="shop-item">
+        <div>
+          <strong>Master Chef 👩‍🍳</strong>
+          <p>Doubles muffins per click · Owned: <span id="chefCount">0</span></p>
+        </div>
+        <button id="buyChef">Buy — <span id="chefCost">200</span></button>
+      </div>
+    </section>
+
+    <section class="achievements">
+      <h2>Achievements</h2>
+      <div class="achievement-list">
+        <div class="achievement" id="achievement-clicks">👆 Click 100 times</div>
+        <div class="achievement" id="achievement-earned">🧁 Earn 1,000 muffins</div>
+        <div class="achievement" id="achievement-bakery">🏠 Own 10 items</div>
+        <div class="achievement" id="achievement-rich">💰 Earn 10,000 muffins</div>
+      </div>
+    </section>
+
+    <p class="save-note">Your game saves automatically in this browser.</p>
+    <button id="resetGame" class="reset-button">Reset Game</button>
+  </main>
+
+  <script>
+    const SAVE_KEY = "muffin-clicker-save-v2";
+    const THEME_KEY = "muffin-clicker-theme";
+    const availableThemes = ["cookie", "dark", "strawberry", "mint", "sky"];
+
+    const defaultGame = {
+      score: 0,
+      power: 1,
+      muffinsPerSecond: 0,
+      totalEarned: 0,
+      clicks: 0,
+      items: {
+        spoon: 0,
+        bakery: 0,
+        oven: 0,
+        chef: 0
+      }
+    };
+
+    let game = loadGame();
+    let animationTimer;
+    let noticeTimer;
+    let goldenTimer;
+    let goldenReward = 0;
+
+    const scoreElement = document.querySelector("#score");
+    const powerElement = document.querySelector("#power");
+    const perSecondElement = document.querySelector("#perSecond");
+    const muffinButton = document.querySelector("#muffin");
+    const muffinImage = document.querySelector("#muffin img");
+    const noticeElement = document.querySelector("#notice");
+    const goldenButton = document.querySelector("#goldenMuffin");
+    const themeSelect = document.querySelector("#themeSelect");
+
+    const shopItems = {
+      spoon: {
+        countId: "spoonCount",
+        costId: "spoonCost",
+        buttonId: "buySpoon",
+        baseCost: 10,
+        growth: 1.5,
+        buy() {
+          game.power += 1;
+        }
+      },
+      bakery: {
+        countId: "bakeryCount",
+        costId: "bakeryCost",
+        buttonId: "buyBakery",
+        baseCost: 25,
+        growth: 1.6,
+        buy() {
+          game.muffinsPerSecond += 1;
+        }
+      },
+      oven: {
+        countId: "ovenCount",
+        costId: "ovenCost",
+        buttonId: "buyOven",
+        baseCost: 100,
+        growth: 1.75,
+        buy() {
+          game.muffinsPerSecond += 5;
+        }
+      },
+      chef: {
+        countId: "chefCount",
+        costId: "chefCost",
+        buttonId: "buyChef",
+        baseCost: 200,
+        growth: 2,
+        buy() {
+          game.power *= 2;
+        }
+      }
+    };
+
+    function loadGame() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+
+        if (!saved) return structuredClone(defaultGame);
+
+        return {
+          ...structuredClone(defaultGame),
+          ...saved,
+          items: {
+            ...defaultGame.items,
+            ...(saved.items || {})
+          }
+        };
+      } catch {
+        return structuredClone(defaultGame);
+      }
+    }
+
+    function formatNumber(number) {
+      return Math.floor(number).toLocaleString("en-US");
+    }
+
+    function getCost(itemKey) {
+      const item = shopItems[itemKey];
+      return Math.ceil(item.baseCost * item.growth ** game.items[itemKey]);
+    }
+
+    function saveGame() {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(game));
+    }
+
+    function showNotice(message) {
+      noticeElement.textContent = message;
+      clearTimeout(noticeTimer);
+      noticeTimer = setTimeout(() => {
+        noticeElement.textContent = "";
+      }, 2200);
+    }
+
+    function updateAchievements() {
+      const totalItems = Object.values(game.items).reduce((sum, count) => sum + count, 0);
+
+      document.querySelector("#achievement-clicks")
+        .classList.toggle("unlocked", game.clicks >= 100);
+
+      document.querySelector("#achievement-earned")
+        .classList.toggle("unlocked", game.totalEarned >= 1000);
+
+      document.querySelector("#achievement-bakery")
+        .classList.toggle("unlocked", totalItems >= 10);
+
+      document.querySelector("#achievement-rich")
+        .classList.toggle("unlocked", game.totalEarned >= 10000);
+    }
+
+    function updateScreen() {
+      scoreElement.textContent = formatNumber(game.score);
+      powerElement.textContent = formatNumber(game.power);
+      perSecondElement.textContent = formatNumber(game.muffinsPerSecond);
+
+      for (const [key, item] of Object.entries(shopItems)) {
+        const cost = getCost(key);
+        document.querySelector(`#${item.countId}`).textContent = game.items[key];
+        document.querySelector(`#${item.costId}`).textContent = formatNumber(cost);
+        document.querySelector(`#${item.buttonId}`).disabled = game.score < cost;
+      }
+
+      updateAchievements();
+    }
+
+    function addMuffins(amount) {
+      game.score += amount;
+      game.totalEarned += amount;
+      updateScreen();
+    }
+
+    muffinButton.addEventListener("click", () => {
+      game.clicks += 1;
+      addMuffins(game.power);
+
+      muffinImage.classList.remove("click-animation");
+      void muffinImage.offsetWidth;
+      muffinImage.classList.add("click-animation");
+
+      clearTimeout(animationTimer);
+      animationTimer = setTimeout(() => {
+        muffinImage.classList.remove("click-animation");
+      }, 300);
+    });
+
+    for (const [key, item] of Object.entries(shopItems)) {
+      document.querySelector(`#${item.buttonId}`).addEventListener("click", () => {
+        const cost = getCost(key);
+
+        if (game.score < cost) return;
+
+        game.score -= cost;
+        game.items[key] += 1;
+        item.buy();
+
+        showNotice("Upgrade purchased!");
+        updateScreen();
+        saveGame();
+      });
+    }
+
+    function scheduleGoldenMuffin() {
+      const delay = 18000 + Math.random() * 17000;
+
+      goldenTimer = setTimeout(() => {
+        goldenReward = Math.max(
+          25,
+          Math.floor(game.score * 0.15) + game.power * 10 + game.muffinsPerSecond * 15
+        );
+
+        document.querySelector("#goldenReward").textContent = formatNumber(goldenReward);
+        goldenButton.hidden = false;
+
+        setTimeout(() => {
+          goldenButton.hidden = true;
+          scheduleGoldenMuffin();
+        }, 10000);
+      }, delay);
+    }
+
+    goldenButton.addEventListener("click", () => {
+      if (goldenButton.hidden) return;
+
+      const reward = goldenReward;
+      goldenButton.hidden = true;
+      addMuffins(reward);
+      showNotice(`Golden Muffin collected! +${formatNumber(reward)} muffins!`);
+      saveGame();
+      scheduleGoldenMuffin();
+    });
+
+    themeSelect.addEventListener("change", () => {
+      const theme = themeSelect.value;
+      document.body.dataset.theme = theme;
+      localStorage.setItem(THEME_KEY, theme);
+    });
+
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (availableThemes.includes(savedTheme)) {
+      document.body.dataset.theme = savedTheme;
+      themeSelect.value = savedTheme;
+    }
+
+    document.querySelector("#resetGame").addEventListener("click", () => {
+      if (!confirm("Reset all your muffins and upgrades?")) return;
+
+      localStorage.removeItem(SAVE_KEY);
+      location.reload();
+    });
+
+    setInterval(() => {
+      if (game.muffinsPerSecond > 0) {
+        addMuffins(game.muffinsPerSecond);
+      }
+    }, 1000);
+
+    setInterval(saveGame, 5000);
+    window.addEventListener("beforeunload", saveGame);
+
+    updateScreen();
+    scheduleGoldenMuffin();
+  </script>
+</body>
+</html>
