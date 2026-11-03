@@ -70,16 +70,28 @@
 
     body[data-theme="Rainbow"] {
       color-scheme: light;
-      --bg: #fff3f8;
-      --panel: #fffaff;
-      --text: #3e2859;
-      --muted: #786287;
-      --accent: #9662d9;
-      --accent-strong: #7442b8;
+      --bg: #ff5cad;
+      --panel: #fffdfd;
+      --text: #351047;
+      --muted: #642c70;
+      --accent: #fa168b;
+      --accent-strong: #7100d8;
       --button-text: #fff;
-      --border: #e5ccef;
-      --shadow: 0 8px 24px rgb(107 70 145 / 14%);
-      background-image: linear-gradient(135deg, #ffe9ef, #fff4dd 35%, #e8f8e8 62%, #e8efff 82%, #f4e9ff);
+      --border: #ff54b5;
+      --shadow: 0 12px 34px rgb(80 0 130 / 24%);
+      background-image: linear-gradient(
+        125deg,
+        #ff2878 0%,
+        #ff7900 16%,
+        #ffe600 32%,
+        #36e34b 48%,
+        #00d6d9 64%,
+        #3867ff 80%,
+        #bd32ff 92%,
+        #ff2878 100%
+      );
+      background-size: 360% 360%;
+      animation: rainbow-background-shift 18s ease infinite;
     }
 
     * {
@@ -465,6 +477,168 @@
     .theme-button:disabled {
       opacity: 0.58;
       cursor: not-allowed;
+    }
+
+    body[data-theme="Rainbow"] .panel,
+    body[data-theme="Rainbow"] .splash-card {
+      border: 3px solid transparent;
+      background:
+        linear-gradient(#fffdfd, #fffdfd) padding-box,
+        linear-gradient(125deg, #ff2878, #ff9f00, #fff000, #28d94b, #00cfe0, #5365ff, #d32cff, #ff2878) border-box;
+      box-shadow:
+        0 14px 36px rgb(67 0 111 / 24%),
+        0 0 24px rgb(255 255 255 / 62%);
+    }
+
+    body[data-theme="Rainbow"] h1,
+    body[data-theme="Rainbow"] h2,
+    body[data-theme="Rainbow"] h3 {
+      background: linear-gradient(90deg, #ed176d, #f07800, #c49b00, #159a48, #008fa8, #4050db, #9b23d2);
+      background-clip: text;
+      color: transparent;
+      -webkit-background-clip: text;
+    }
+
+    body[data-theme="Rainbow"] .score {
+      background: linear-gradient(90deg, #ed176d, #ef7600, #b38c00, #168b43, #007fba, #6231dc, #ed176d);
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 22px rgb(255 255 255 / 75%);
+      -webkit-background-clip: text;
+    }
+
+    body[data-theme="Rainbow"] .muffin-button {
+      isolation: isolate;
+      background: radial-gradient(circle, rgb(255 255 255 / 95%) 48%, rgb(255 255 255 / 48%) 64%, transparent 73%);
+    }
+
+    body[data-theme="Rainbow"] .muffin-button::before {
+      position: absolute;
+      inset: 2%;
+      z-index: -1;
+      border-radius: 50%;
+      background: conic-gradient(#ff1744, #ff9100, #ffea00, #00d85a, #00c9ff, #654cff, #df18ff, #ff1744);
+      content: "";
+      filter: drop-shadow(0 0 12px rgb(255 255 255 / 90%));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 13px), #000 calc(100% - 10px));
+      pointer-events: none;
+      animation: rainbow-ring-spin 7s linear infinite;
+    }
+
+    body[data-theme="Rainbow"] .muffin-button.all-achievements-complete::before {
+      inset: 1%;
+      border: 3px solid #fff;
+      background: transparent;
+      box-shadow:
+        0 0 12px 4px rgb(255 0 165 / 75%),
+        0 0 28px 10px rgb(92 35 255 / 48%),
+        inset 0 0 18px rgb(255 255 255 / 78%);
+      filter: none;
+      mask: none;
+      animation: achievement-glow 1.8s ease-in-out infinite;
+    }
+
+    body[data-theme="Rainbow"] .muffin-image,
+    body[data-theme="Rainbow"] .splash-muffin {
+      filter:
+        drop-shadow(0 0 8px #ff2b9d)
+        drop-shadow(0 0 16px #5d43ff)
+        drop-shadow(0 0 25px rgb(0 213 255 / 78%))
+        drop-shadow(0 10px 10px rgb(60 35 20 / 20%));
+    }
+
+    body[data-theme="Rainbow"] .muffin-button.all-achievements-complete .muffin-image {
+      filter:
+        drop-shadow(0 0 9px #ff2b9d)
+        drop-shadow(0 0 18px #613fff)
+        drop-shadow(0 0 28px rgb(0 213 255 / 82%))
+        drop-shadow(0 10px 10px rgb(60 35 20 / 20%));
+    }
+
+    body[data-theme="Rainbow"] .primary-button,
+    body[data-theme="Rainbow"] .shop-item button,
+    body[data-theme="Rainbow"] .theme-button.active {
+      border: 2px solid #fff;
+      background: linear-gradient(105deg, #ff1744, #ff7800, #d5b500, #00a84f, #008fca, #533de0, #bd1bd4);
+      color: #fff;
+      box-shadow: 0 4px 14px rgb(124 0 165 / 30%);
+      text-shadow: 0 1px 3px rgb(40 0 80 / 75%);
+    }
+
+    body[data-theme="Rainbow"] .theme-button[data-theme="Rainbow"] {
+      border: 2px solid #fff;
+      background: linear-gradient(105deg, #ff1744, #ff7800, #d5b500, #00a84f, #008fca, #533de0, #bd1bd4);
+      color: #fff;
+      text-shadow: 0 1px 3px rgb(40 0 80 / 75%);
+    }
+
+    body[data-theme="Rainbow"] .secondary-button {
+      border: 2px solid transparent;
+      background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(105deg, #ff2878, #ff9f00, #35ca55, #00bcd4, #654cff, #d32cff) border-box;
+      color: #531661;
+    }
+
+    body[data-theme="Rainbow"] .stat,
+    body[data-theme="Rainbow"] .shop-item,
+    body[data-theme="Rainbow"] .achievement {
+      border: 2px solid transparent;
+      box-shadow: 0 4px 12px rgb(74 0 117 / 10%);
+    }
+
+    body[data-theme="Rainbow"] .stat:nth-child(5n + 1),
+    body[data-theme="Rainbow"] .shop-item:nth-child(5n + 1),
+    body[data-theme="Rainbow"] .achievement:nth-child(5n + 1) {
+      border-color: #ff4e91;
+      background: #fff0f6;
+    }
+
+    body[data-theme="Rainbow"] .stat:nth-child(5n + 2),
+    body[data-theme="Rainbow"] .shop-item:nth-child(5n + 2),
+    body[data-theme="Rainbow"] .achievement:nth-child(5n + 2) {
+      border-color: #ff9f25;
+      background: #fff5e8;
+    }
+
+    body[data-theme="Rainbow"] .stat:nth-child(5n + 3),
+    body[data-theme="Rainbow"] .shop-item:nth-child(5n + 3),
+    body[data-theme="Rainbow"] .achievement:nth-child(5n + 3) {
+      border-color: #41bd69;
+      background: #edfff1;
+    }
+
+    body[data-theme="Rainbow"] .stat:nth-child(5n + 4),
+    body[data-theme="Rainbow"] .shop-item:nth-child(5n + 4),
+    body[data-theme="Rainbow"] .achievement:nth-child(5n + 4) {
+      border-color: #27a9d3;
+      background: #eefdff;
+    }
+
+    body[data-theme="Rainbow"] .stat:nth-child(5n),
+    body[data-theme="Rainbow"] .shop-item:nth-child(5n),
+    body[data-theme="Rainbow"] .achievement:nth-child(5n) {
+      border-color: #a044d4;
+      background: #f7efff;
+    }
+
+    body[data-theme="Rainbow"] .golden-muffin {
+      border-color: #fff;
+      background: linear-gradient(105deg, #ff1744, #ff9100, #ffea00, #00d85a, #00c9ff, #654cff, #df18ff);
+      color: #fff;
+      box-shadow:
+        0 0 0 3px #bc36ff,
+        0 8px 26px rgb(68 0 110 / 38%);
+      text-shadow: 0 1px 4px rgb(55 0 70 / 75%);
+    }
+
+    @keyframes rainbow-background-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes rainbow-ring-spin {
+      to { transform: rotate(360deg); }
     }
 
     .section {
