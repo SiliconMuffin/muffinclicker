@@ -69,6 +69,8 @@
     }
 
     body[data-theme="Rainbow"] {
+      position: relative;
+      isolation: isolate;
       color-scheme: light;
       --bg: #ff5cad;
       --panel: #fffdfd;
@@ -90,8 +92,33 @@
         #bd32ff 92%,
         #ff2878 100%
       );
-      background-size: 360% 360%;
-      animation: rainbow-background-shift 18s ease infinite;
+      background-size: 500% 500%;
+      background-attachment: fixed;
+      animation: rainbow-background-shift 11s ease-in-out infinite;
+    }
+
+    body[data-theme="Rainbow"]::before {
+      position: fixed;
+      inset: -45vmax;
+      z-index: -1;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        #ff1744,
+        #ff7900,
+        #fff000,
+        #21e65a,
+        #00d9e8,
+        #365dff,
+        #a62cff,
+        #ff24b5,
+        #ff1744
+      );
+      content: "";
+      filter: blur(100px) saturate(1.65);
+      opacity: 0.72;
+      pointer-events: none;
+      animation: rainbow-aurora-drift 24s linear infinite;
     }
 
     * {
@@ -637,8 +664,21 @@
       50% { background-position: 100% 50%; }
     }
 
+    @keyframes rainbow-aurora-drift {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.16); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
     @keyframes rainbow-ring-spin {
       to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body[data-theme="Rainbow"],
+      body[data-theme="Rainbow"]::before {
+        animation: none;
+      }
     }
 
     .section {
